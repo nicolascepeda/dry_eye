@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Beyond Reality Face - BRFv4 - HTML5/Javascript face tracking</title>
+
+    <script src="js/preload.min.js"></script>
+
+    <script src="js/src.js"></script>
+
+    <script>
+        window.onload = brfv4Example.start;
+    </script>
+
+</head>
+
+<body>
+
+<div id="_wrapper">
+
+    <div id="_content">
+        <video  id="_webcam" playsinline></video>
+        <canvas id="_imageData"></canvas>
+        <canvas id="_faceSub"></canvas>
+        <canvas id="_t3d"></canvas>
+        <canvas id="_f3d"></canvas>
+        <canvas id="_drawing"></canvas>
+        <div id="_stats"></div>
+        <div id="_progressBar"></div>
+        <a href="http://www.tastenkunst.com" target="_blank">
+            <img id="_brfv4_logo" src="assets/brfv4_logo.png" alt="BRFv4 Logo"/>
+        </a>
+    </div>
+
+    <div id="_subline"></div>
+    <div id="_highlight"><pre><code class="javascript" id="_gist"></code></pre></div>
+</div>
+
+<div id="_settingsRight"></div>
+
+</body>
+
+</html>
