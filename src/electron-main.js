@@ -46,26 +46,6 @@ async function  doOnReady () {
     }
       });
 
-  /*
-  let myNotification = undefined;
-
-  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    if(message === "BLINK_WARNING_CLOSE" && myNotification){
-      console.log("BLINK_CLOSE");
-      myNotification.close();
-    } else if(message === "BLINK_WARNING_OPEN"){
-      console.log("BLINK_OPEN");
-      myNotification = new Notification('Blink', {
-        title : "Blink Now",
-        body: 'Blink Esa',
-        timeoutType : 'never',
-        silent : false,
-        urgency : "critical"
-      });
-      myNotification.show();
-    }
-  });
-   */
   // and load the index.html of the app.
   mainWindow.loadFile('src/index.html')
 
