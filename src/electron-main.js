@@ -4,10 +4,28 @@ const path = require('path')
 
 const imageTracking = "src/img/visible-eye.png";
 const imageNoTracking = "src/img/no-tracking.png";
+const imagePaused = "src/img/paused.png";
 const showScreen = false;
 
+let tray;
+let paused = false;
+
+function getContextMenu(){
+  return Menu.buildFromTemplate([
+    { label : paused ? "Resume" : "Pause" , click: togglePause},
+    { type: 'separator'},
+    { label: 'Exit', role : "quit" }
+  ]);
+}
+
+function togglePause(){
+  paused = !paused;
+  tray.setContextMenu(getContextMenu());
+}
+
 async function  doOnReady () {
-  const tray = new Tray(imageTracking);
+  tray = new Tray(imageTracking);
+  tray.setContextMenu(getContextMenu());
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -28,20 +46,23 @@ async function  doOnReady () {
 
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
     if(message.indexOf("EVENT.") >= 0){
-      if(message === "EVENT.FACE_TRACKING_ENABLED"){
-        tray.setImage(imageTracking);
-      } else if(message === "EVENT.FACE_TRACKING_DISABLED"){
-        tray.setImage(imageNoTracking);
-      }
-
-
-      if(message === "EVENT.BLINK_WARNING_CLOSE"){
-        console.log("BLINK_CLOSE");
-        popupWindow.hide();
-        popupWindow.hide();
-      } else if(message === "EVENT.BLINK_WARNING_OPEN"){
-        console.log("BLINK_OPEN");
-        popupWindow.show();
+      if(paused){
+        tray.setImage(imagePaused);
+      } else {
+        if(message === "EVENT.FACE_TRACKING_ENABLED"){
+          tray.setImage(imageTracking);
+        } else if(message === "EVENT.FACE_TRACKING_DISABLED"){
+          tray.setImage(imageNoTracking);
+        }
+        
+        if(message === "EVENT.BLINK_WARNING_CLOSE"){
+          console.log("BLINK_CLOSE");
+          popupWindow.hide();
+          popupWindow.hide();
+        } else if(message === "EVENT.BLINK_WARNING_OPEN"){
+          console.log("BLINK_OPEN");
+          popupWindow.show();
+        }
       }
     }
       });
