@@ -5,6 +5,10 @@
 		brfManager.init(resolution, resolution, brfv4Example.appId);
 	};
 
+	function sendEvent(eventCode){
+		console.log("EVENT."+eventCode);
+	}
+
 	brfv4Example.updateCurrentExample = function(brfManager, imageData, draw) {
 		brfManager.update(imageData);
 
@@ -22,6 +26,8 @@
 			var face = faces[i];
 
 			if(face.state === brfv4.BRFState.FACE_TRACKING) {
+				sendEvent("FACE_TRACKING_ENABLED");
+				faceTracking = true;
 
 				// simple blink detection
 
@@ -69,7 +75,7 @@
 					console.log("blink " + blinkRatio.toFixed(2) + " " + yLE.toFixed(2) + " " +
 						yRE.toFixed(2) + " " + yN.toFixed(2));
 
-					blink(3000);
+					blink(5000);
 				}
 
 				// Let the color of the shape show whether you blinked.
@@ -82,17 +88,20 @@
 				draw.drawVertices(	face.vertices, 2.0, false, color, 0.4);
 
 				storeFaceShapeVertices(v);
+			} else {
+				sendEvent("FACE_TRACKING_DISABLED");
+				faceTracking = false;
 			}
 		}
 	};
 
 	function blink(timeoutInMils) {
-		console.log("begin blink t: ", _timeOutHandle, " popupWin: ", _popupWin);
 		// We are blinking, reset timeout
 		if(_timeOutHandle){
 			window.clearTimeout(_timeOutHandle);
 		}
-		console.log("BLINK_WARNING_CLOSE");
+		
+		sendEvent("BLINK_WARNING_CLOSE");
 		/*
 		if(_popupWin){
 		_popupWin.close();
@@ -103,7 +112,9 @@
 
 		_timeOutHandle = window.setTimeout(function(){
 			// if last time blinked was more than 3 seconds ago force blinking
-			console.log("BLINK_WARNING_OPEN");
+			if(faceTracking){
+				sendEvent("BLINK_WARNING_OPEN");
+			}
 			/*
 			_popupWin = blockingWindow();
 			 */
@@ -139,6 +150,7 @@
 	var _oldFaceShapeVertices = [];
 	var _timeOutHandle		= -1;
 	var _popupWin = undefined;
+	var faceTracking = false;
 
 	blink(5000);
 })();

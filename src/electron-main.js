@@ -1,11 +1,22 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Notification} = require('electron')
+const {app, BrowserWindow, Notification, Tray, nativeImage, Menu} = require('electron')
 const path = require('path')
 
-function createWindow () {
+const imageTracking = "src/img/visible-eye.png";
+const imageNoTracking = "src/img/no-tracking.png";
+
+
+async function  doOnReady () {
+  const tray = new Tray(imageTracking);
+
+//  tray.setContextMenu(contextMenu);
+//  tray.setToolTip('This is my application');
+
+  const showScreen = true;
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    show : false,
+    show : showScreen,
     webPreferences: {
     //  preload: path.join(__dirname, 'preload.js')
       //offscreen: true,
@@ -16,19 +27,28 @@ function createWindow () {
     }
   });
 
-  let popupWindow = new BrowserWindow({show : false,  frame : false});
+  let popupWindow = new BrowserWindow({show : showScreen,  frame : false});
   popupWindow.maximize();
   popupWindow.loadFile('src/popup.html');
 
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        if(message === "BLINK_WARNING_CLOSE"){
-          console.log("BLINK_CLOSE");
-          popupWindow.hide();
-          popupWindow.hide();
-        } else if(message === "BLINK_WARNING_OPEN"){
-          console.log("BLINK_OPEN");
-          popupWindow.show();
-        }
+    if(message.indexOf("EVENT.") >= 0){
+      if(message === "EVENT.FACE_TRACKING_ENABLED"){
+        tray.setImage(imageTracking);
+      } else if(message === "EVENT.FACE_TRACKING_DISABLED"){
+        tray.setImage(imageNoTracking);
+      }
+
+
+      if(message === "EVENT.BLINK_WARNING_CLOSE"){
+        console.log("BLINK_CLOSE");
+        popupWindow.hide();
+        popupWindow.hide();
+      } else if(message === "EVENT.BLINK_WARNING_OPEN"){
+        console.log("BLINK_OPEN");
+        popupWindow.show();
+      }
+    }
       });
 
   /*
@@ -62,12 +82,12 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  doOnReady()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) doOnReady()
   })
 })
 
