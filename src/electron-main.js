@@ -4,15 +4,10 @@ const path = require('path')
 
 const imageTracking = "src/img/visible-eye.png";
 const imageNoTracking = "src/img/no-tracking.png";
-
+const showScreen = false;
 
 async function  doOnReady () {
   const tray = new Tray(imageTracking);
-
-//  tray.setContextMenu(contextMenu);
-//  tray.setToolTip('This is my application');
-
-  const showScreen = true;
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
