@@ -1,71 +1,82 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, Notification, Tray, nativeImage, Menu} = require('electron')
+const { app, BrowserWindow, Notification, Tray, nativeImage, Menu } = require('electron')
 const path = require('path')
 
 const imageTracking = "src/img/visible-eye.png";
 const imageNoTracking = "src/img/no-tracking.png";
 const imagePaused = "src/img/paused.png";
-const showScreen = false;
 
-let tray;
+let tray, mainWindow;
 let paused = false;
+let debug = false;
 
-function getContextMenu(){
+function getContextMenu() {
   return Menu.buildFromTemplate([
-    { label : paused ? "Resume" : "Pause" , click: togglePause},
-    { type: 'separator'},
-    { label: 'Exit', role : "quit" }
+    {
+      label: paused ? "Resume" : "Pause", click: () => {
+        paused = !paused;
+        tray.setContextMenu(getContextMenu());
+      }
+    },
+    { type: 'separator' },
+    {
+      label: "Debug Mode", type: 'checkbox', checked: debug, click: () => {
+        debug = !debug; 
+        tray.setContextMenu(getContextMenu());
+        if(debug){
+          mainWindow.show();
+        } else {
+          mainWindow.hide();
+        }
+      }
+    },
+    { label: 'Exit', role: "quit" }
   ]);
 }
 
-function togglePause(){
-  paused = !paused;
-  tray.setContextMenu(getContextMenu());
-}
-
-async function  doOnReady () {
+async function doOnReady() {
   tray = new Tray(imageTracking);
   tray.setContextMenu(getContextMenu());
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    show : showScreen,
+  mainWindow = new BrowserWindow({
+    show: debug,
     webPreferences: {
-    //  preload: path.join(__dirname, 'preload.js')
+      //  preload: path.join(__dirname, 'preload.js')
       //offscreen: true,
       pageVisibility: true,
       backgroundThrottling: false,
-      nodeIntegration : true,
-      nodeIntegrationInSubFrames : true
+      nodeIntegration: true,
+      nodeIntegrationInSubFrames: true
     }
   });
 
-  let popupWindow = new BrowserWindow({show : showScreen,  frame : false});
+  let popupWindow = new BrowserWindow({ show: false, frame: false });
   popupWindow.maximize();
   popupWindow.loadFile('src/popup.html');
 
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    if(message.indexOf("EVENT.") >= 0){
-      if(paused){
+    if (message.indexOf("EVENT.") >= 0) {
+      if (paused) {
         tray.setImage(imagePaused);
       } else {
-        if(message === "EVENT.FACE_TRACKING_ENABLED"){
+        if (message === "EVENT.FACE_TRACKING_ENABLED") {
           tray.setImage(imageTracking);
-        } else if(message === "EVENT.FACE_TRACKING_DISABLED"){
+        } else if (message === "EVENT.FACE_TRACKING_DISABLED") {
           tray.setImage(imageNoTracking);
         }
-        
-        if(message === "EVENT.BLINK_WARNING_CLOSE"){
+
+        if (message === "EVENT.BLINK_WARNING_CLOSE") {
           console.log("BLINK_CLOSE");
           popupWindow.hide();
           popupWindow.hide();
-        } else if(message === "EVENT.BLINK_WARNING_OPEN"){
+        } else if (message === "EVENT.BLINK_WARNING_OPEN") {
           console.log("BLINK_OPEN");
           popupWindow.show();
         }
       }
     }
-      });
+  });
 
   // and load the index.html of the app.
   mainWindow.loadFile('src/index.html')
