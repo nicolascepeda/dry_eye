@@ -97,27 +97,30 @@
 
 	function blink(timeoutInMils) {
 		// We are blinking, reset timeout
-		if(_timeOutHandle){
-			window.clearTimeout(_timeOutHandle);
+		if(_timeOutHandle1){
+			window.clearTimeout(_timeOutHandle1);
+			window.clearTimeout(_timeOutHandle2);
+			window.clearTimeout(_timeOutHandle3);
 		}
 		
 		sendEvent("BLINK_WARNING_CLOSE");
-		/*
-		if(_popupWin){
-		_popupWin.close();
-		_popupWin = undefined;
-			_popupWin.width = 0;
-			_popupWin.height = 0;
-		}*/
 
-		_timeOutHandle = window.setTimeout(function(){
-			// if last time blinked was more than 3 seconds ago force blinking
+		_timeOutHandle1 = window.setTimeout(function(){
 			if(faceTracking){
-				sendEvent("BLINK_WARNING_OPEN");
+				sendEvent("BLINK_WARNING_OPEN_1");
 			}
-			/*
-			_popupWin = blockingWindow();
-			 */
+		}, timeoutInMils * 0.6);
+
+		_timeOutHandle2 = window.setTimeout(function(){
+			if(faceTracking){
+				sendEvent("BLINK_WARNING_OPEN_2");
+			}
+		}, timeoutInMils * 0.8);
+
+		_timeOutHandle3 = window.setTimeout(function(){
+			if(faceTracking){
+				sendEvent("BLINK_WARNING_OPEN_3");
+			}
 		}, timeoutInMils);
 	}
 
@@ -148,7 +151,7 @@
 	}
 
 	var _oldFaceShapeVertices = [];
-	var _timeOutHandle		= -1;
+	var _timeOutHandle1,_timeOutHandle2, _timeOutHandle3		= -1;
 	var _popupWin = undefined;
 	var faceTracking = false;
 

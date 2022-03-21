@@ -21,9 +21,9 @@ function getContextMenu() {
     { type: 'separator' },
     {
       label: "Debug Mode", type: 'checkbox', checked: debug, click: () => {
-        debug = !debug; 
+        debug = !debug;
         tray.setContextMenu(getContextMenu());
-        if(debug){
+        if (debug) {
           mainWindow.show();
         } else {
           mainWindow.hide();
@@ -42,8 +42,6 @@ async function doOnReady() {
   mainWindow = new BrowserWindow({
     show: debug,
     webPreferences: {
-      //  preload: path.join(__dirname, 'preload.js')
-      //offscreen: true,
       pageVisibility: true,
       backgroundThrottling: false,
       nodeIntegration: true,
@@ -70,7 +68,9 @@ async function doOnReady() {
           console.log("BLINK_CLOSE");
           popupWindow.hide();
           popupWindow.hide();
-        } else if (message === "EVENT.BLINK_WARNING_OPEN") {
+        } else if (message === "EVENT.BLINK_WARNING_OPEN_1") {
+          //new Notification({ title: "Blink "}).show();
+        } else if (message === "EVENT.BLINK_WARNING_OPEN_3") {
           console.log("BLINK_OPEN");
           popupWindow.show();
         }
@@ -78,11 +78,7 @@ async function doOnReady() {
     }
   });
 
-  // and load the index.html of the app.
   mainWindow.loadFile('src/index.html')
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
