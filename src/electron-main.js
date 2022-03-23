@@ -30,7 +30,11 @@ function getContextMenu() {
         }
       }
     },
-    { label: 'Exit', role: "quit" }
+    { label: 'Exit' , click : () => {
+      console.log("quit");
+      app.exit();
+      //app.quit();
+    }}
   ]);
 }
 
