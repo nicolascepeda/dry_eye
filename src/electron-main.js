@@ -45,6 +45,8 @@ async function doOnReady() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     show: debug,
+    modal: true,
+    frame: false,
     webPreferences: {
       pageVisibility: true,
       backgroundThrottling: false,
