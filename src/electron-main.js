@@ -49,7 +49,7 @@ async function doOnReady() {
     }
   });
 
-  let popupWindow = new BrowserWindow({ show: true, frame: false, modal :true, roundedCorners : false});
+  let popupWindow = new BrowserWindow({ show: false, frame: false, modal :true, roundedCorners : false});
   popupWindow.maximize();
   popupWindow.loadFile('src/popup.html');
 
