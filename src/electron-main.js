@@ -66,7 +66,7 @@ async function doOnReady() {
 
         if (message === "EVENT.BLINK_WARNING_CLOSE") {
           console.log("BLINK_CLOSE");
-         // popupWindow.hide();
+          popupWindow.hide();
         } else if (message === "EVENT.BLINK_WARNING_OPEN_1") {
           //new Notification({ title: "Blink "}).show();
         } else if (message === "EVENT.BLINK_WARNING_OPEN_3") {
@@ -91,6 +91,8 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) doOnReady()
   })
+
+  app.dock.hide()
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
