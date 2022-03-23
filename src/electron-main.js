@@ -49,7 +49,7 @@ async function doOnReady() {
     }
   });
 
-  let popupWindow = new BrowserWindow({ show: false, frame: false, modal :true });
+  let popupWindow = new BrowserWindow({ show: true, frame: false, modal :true, roundedCorners : false});
   popupWindow.maximize();
   popupWindow.loadFile('src/popup.html');
 
@@ -66,7 +66,7 @@ async function doOnReady() {
 
         if (message === "EVENT.BLINK_WARNING_CLOSE") {
           console.log("BLINK_CLOSE");
-          popupWindow.hide();
+         // popupWindow.hide();
         } else if (message === "EVENT.BLINK_WARNING_OPEN_1") {
           //new Notification({ title: "Blink "}).show();
         } else if (message === "EVENT.BLINK_WARNING_OPEN_3") {
