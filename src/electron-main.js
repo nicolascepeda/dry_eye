@@ -44,6 +44,7 @@ async function doOnReady() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    icon : imageTracking,
     show: debug,
     modal: true,
     frame: false,
@@ -55,19 +56,33 @@ async function doOnReady() {
     }
   });
 
-  let popupWindow = new BrowserWindow({ show: false, frame: false, modal :true, roundedCorners : false});
+  let popupWindow = new BrowserWindow({ show: false, frame: false, modal :true, roundedCorners : false, icon : imageTracking,});
   popupWindow.maximize();
   popupWindow.loadFile('src/popup.html');
+
+  let isTracking = {state : false};
 
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
     if (message.indexOf("EVENT.") >= 0) {
       if (paused) {
         tray.setImage(imagePaused);
       } else {
-        if (message === "EVENT.FACE_TRACKING_ENABLED") {
+        if (message === "EVENT.FACE_TRACKING_ENABLED" && !isTracking.state) {
+          isTracking.state = true;
           tray.setImage(imageTracking);
-        } else if (message === "EVENT.FACE_TRACKING_DISABLED") {
+          const notf = new Notification({title: "Tracking Enabled",body: "Tracking Enabled", silent : true, icon : imageTracking});
+          notf.show()
+          setTimeout(() => {
+            notf.close()
+          }, 1000)
+        } else if (message === "EVENT.FACE_TRACKING_DISABLED" && isTracking.state) {
+          isTracking.state = false;
           tray.setImage(imageNoTracking);
+          const notf = new Notification({title: "Tracking Disabled",body: "Tracking Disabled", silent : true, icon : imageNoTracking});
+          notf.show()
+          setTimeout(() => {
+            notf.close()
+          }, 1000)
         }
 
         if (message === "EVENT.BLINK_WARNING_CLOSE") {
