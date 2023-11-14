@@ -12,7 +12,6 @@ This very hacky app counts the number of blinks, and if the person in front of t
 
 This app is good to train healty blinking habits and thus decrease dry eye related problems.
 
-
 ## Installation
 
 ```
@@ -20,7 +19,6 @@ This app is good to train healty blinking habits and thus decrease dry eye relat
 * npm install
 * npm start
 ```
-
 ## Running
 
 npm run start
