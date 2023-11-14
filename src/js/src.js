@@ -24,7 +24,6 @@ var brfv4Example = {
 var brfv4BaseURL = "js/libs/brf_wasm/";
 
 (function() {
-
     // detect WebAssembly support and load either WASM or ASM version of BRFv4
     var support	= (typeof WebAssembly === 'object');
 
