@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Notification, Tray, nativeImage, Menu } = require('electron')
+const { app, BrowserWindow, Notification, Tray, nativeImage, Menu, dialog } = require('electron')
 const path = require('path')
 
 const imageTracking = "src/img/visible-eye.png";
@@ -25,7 +25,7 @@ function getContextMenu() {
         tray.setContextMenu(getContextMenu());
         if (debug) {
           mainWindow.show();
-        } else {
+       } else {
           mainWindow.hide();
         }
       }
@@ -46,7 +46,7 @@ async function doOnReady() {
   mainWindow = new BrowserWindow({
     icon : imageTracking,
     show: debug,
-    modal: true,
+    modal: true, 
     frame: false,
     webPreferences: {
       pageVisibility: true,
@@ -56,10 +56,10 @@ async function doOnReady() {
     }
   });
 
-  let popupWindow = new BrowserWindow({ show: false, frame: false, modal :true, roundedCorners : false, icon : imageTracking,});
+  let popupWindow = new BrowserWindow({ show: false, frame: false, modal :false, roundedCorners : false, icon : imageTracking,type : 'panel'});
   popupWindow.maximize();
   popupWindow.loadFile('src/popup.html');
-
+ 
   let isTracking = {state : false};
 
   mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
@@ -88,6 +88,7 @@ async function doOnReady() {
         if (message === "EVENT.BLINK_WARNING_CLOSE") {
           console.log("BLINK_CLOSE");
           popupWindow.hide();
+          Menu.sendActionToFirstResponder('hide:');
         } else if (message === "EVENT.BLINK_WARNING_OPEN_1") {
           //new Notification({ title: "Blink "}).show();
         } else if (message === "EVENT.BLINK_WARNING_OPEN_3") {
