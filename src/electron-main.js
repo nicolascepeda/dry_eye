@@ -70,19 +70,21 @@ async function doOnReady() {
         if (message === "EVENT.FACE_TRACKING_ENABLED" && !isTracking.state) {
           isTracking.state = true;
           tray.setImage(imageTracking);
+          /*
           const notf = new Notification({title: "Tracking Enabled",body: "Tracking Enabled", silent : true, icon : imageTracking});
           notf.show()
           setTimeout(() => {
             notf.close()
-          }, 1000)
+          }, 1000)*/
         } else if (message === "EVENT.FACE_TRACKING_DISABLED" && isTracking.state) {
           isTracking.state = false;
           tray.setImage(imageNoTracking);
+          /*
           const notf = new Notification({title: "Tracking Disabled",body: "Tracking Disabled", silent : true, icon : imageNoTracking});
           notf.show()
           setTimeout(() => {
             notf.close()
-          }, 1000)
+          }, 1000)*/
         }
 
         if (message === "EVENT.BLINK_WARNING_CLOSE") {
